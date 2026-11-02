@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>Program.cs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #6c95eb;}
+.s1 { color: #d0d0d0;}
+.s2 { color: #bdbdbd;}
+.s3 { color: #85c46c; font-style: italic;}
+.s4 { color: #c9a26d;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Program.cs</font>
+</center></td></tr></table>
+<pre><span class="s0">namespace </span><span class="s1">Laba5</span>
+<span class="s2">{</span>
+    <span class="s0">public class </span><span class="s1">Program</span>
+    <span class="s2">{</span>
+        <span class="s0">public static void </span><span class="s1">Main</span><span class="s2">()</span>
+        <span class="s2">{</span>
+            <span class="s3">// Создаём мультисписок</span>
+            <span class="s1">MultiList ml </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MultiList</span><span class="s2">();</span>
+
+            <span class="s3">// === 1. ДОБАВЛЯЕМ СТУДЕНТОВ (3) ===</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Ivanov&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Petrov&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Sidorov&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 2. ДОБАВЛЯЕМ КУРСЫ (3) ===</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;101&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;102&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 3. ДОБАВЛЯЕМ СВЯЗИ (addStudentToCourse) ===</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Ivanov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;101&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Ivanov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;102&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Petrov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;102&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Petrov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Sidorov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;101&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Sidorov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 4. ПРОВЕРКА ВЫВОДА (printStudentsOfCourse, printCoursesOfStudent) ===</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;101&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;102&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 5. УДАЛЕНИЕ СТУДЕНТА С КОНКРЕТНОГО КУРСА (removeStudentFromCourse) ===</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;\n=== Удаляем Ivanov с курса 102 ===&quot;</span><span class="s2">);</span>
+            
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">RemoveStudentFromCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Ivanov&quot;</span><span class="s2">), </span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;102&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintCoursesOfStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Ivanov&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 6. УДАЛЕНИЕ СТУДЕНТА СО ВСЕХ КУРСОВ (removeStudent) ===</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;\n=== Удаляем Sidorov со всех курсов ===&quot;</span><span class="s2">);</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">RemoveStudentFromAll</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Sidorov&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;101&quot;</span><span class="s2">));</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;\n=== Вывод курсов, которые посещает Sidorov  ===&quot;</span><span class="s2">);</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintCoursesOfStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Sidorov&quot;</span><span class="s2">));</span>
+
+            <span class="s3">// === 7. УДАЛЕНИЕ ВСЕХ СТУДЕНТОВ С КУРСА (removeCourse) ===</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;\n=== Удаляем всех студентов с курса 103 ===&quot;</span><span class="s2">);</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">RemoveAllFromCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;103&quot;</span><span class="s2">));</span>
+            <span class="s1">ml</span><span class="s2">.</span><span class="s1">PrintCoursesOfStudent</span><span class="s2">(</span><span class="s1">Common</span><span class="s2">.</span><span class="s1">MakeName</span><span class="s2">(</span><span class="s4">&quot;Petrov&quot;</span><span class="s2">));</span>
+
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;\nТестирование всех операций завершено.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

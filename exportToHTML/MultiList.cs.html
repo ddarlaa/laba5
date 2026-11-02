@@ -1,0 +1,322 @@
+<html>
+<head>
+<title>MultiList.cs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #6c95eb;}
+.s1 { color: #d0d0d0;}
+.s2 { color: #bdbdbd;}
+.s3 { color: #85c46c; font-style: italic;}
+.s4 { color: #c9a26d;}
+.s5 { color: #ed94c0;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MultiList.cs</font>
+</center></td></tr></table>
+<pre><span class="s0">namespace </span><span class="s1">Laba5</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">MultiList</span>
+<span class="s2">{</span>
+    <span class="s0">private readonly </span><span class="s1">StudentHash _students </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StudentHash</span><span class="s2">();</span>
+    <span class="s0">private readonly </span><span class="s1">CourseHash _courses </span><span class="s2">= </span><span class="s0">new </span><span class="s1">CourseHash</span><span class="s2">();</span>
+
+    <span class="s0">public void </span><span class="s1">AddStudent</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">name</span><span class="s2">) </span><span class="s1">=&gt; _students</span><span class="s2">.</span><span class="s1">Insert</span><span class="s2">(</span><span class="s1">name</span><span class="s2">);</span>
+    <span class="s0">public void </span><span class="s1">AddCourse</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">name</span><span class="s2">) </span><span class="s1">=&gt; _courses</span><span class="s2">.</span><span class="s1">Insert</span><span class="s2">(</span><span class="s1">name</span><span class="s2">);</span>
+    
+    <span class="s3">// 1. Добавить студента на курс</span>
+    <span class="s0">public void </span><span class="s1">AddStudentToCourse</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">sName</span><span class="s2">, </span><span class="s0">char</span><span class="s2">[] </span><span class="s1">cName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">_students</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">sName</span><span class="s2">);</span>
+        <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">_courses</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">cName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">course </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s3">// Проверка на существование связи</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">FindRegistration</span><span class="s2">(</span><span class="s1">student</span><span class="s2">, </span><span class="s1">course</span><span class="s2">) != </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s1">RegistrationNode reg </span><span class="s2">= </span><span class="s0">new </span><span class="s1">RegistrationNode</span><span class="s2">();</span>
+
+        <span class="s3">// Вставка в кольцо студента (в начало)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">;</span>
+            <span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink </span><span class="s2">= </span><span class="s1">student</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">else</span>
+        <span class="s2">{</span>
+            <span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink </span><span class="s2">= </span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+            <span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s3">// Вставка в кольцо курса (в начало)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">;</span>
+            <span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink </span><span class="s2">= </span><span class="s1">course</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">else</span>
+        <span class="s2">{</span>
+            <span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink </span><span class="s2">= </span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+            <span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 2. Удалить студента с конкретного курса</span>
+    <span class="s0">public void </span><span class="s1">RemoveStudentFromCourse</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">sName</span><span class="s2">, </span><span class="s0">char</span><span class="s2">[] </span><span class="s1">cName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">_students</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">sName</span><span class="s2">);</span>
+        <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">_courses</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">cName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">course </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s1">RegistrationNode? reg </span><span class="s2">= </span><span class="s1">FindRegistration</span><span class="s2">(</span><span class="s1">student</span><span class="s2">, </span><span class="s1">course</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">reg </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s1">RemoveFromStudentRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">student</span><span class="s2">);</span>
+        <span class="s1">RemoveFromCourseRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">course</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 3. Удалить студента со всех курсов</span>
+    <span class="s0">public void </span><span class="s1">RemoveStudentFromAll</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">sName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">_students</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">sName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student?</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">student </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">RegistrationNode reg </span><span class="s2">= (</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">;</span>
+            <span class="s1">BaseNode? next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink</span><span class="s2">;</span>
+
+            <span class="s3">// Находим курс этой регистрации (идём по CourseLink до CourseNode)</span>
+            <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">GetCourseFromRegistration</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">);</span>
+            
+            <span class="s3">// CourseNode? course = null;</span>
+            <span class="s3">// BaseNode? c = reg.CourseLink;</span>
+            <span class="s3">// while (c != null &amp;&amp; c.IsRegistration())</span>
+            <span class="s3">// {</span>
+            <span class="s3">//     c = ((RegistrationNode)c).CourseLink;</span>
+            <span class="s3">// }</span>
+            <span class="s3">// course = c as CourseNode;</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">course </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+                <span class="s1">RemoveFromCourseRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">course</span><span class="s2">);</span>
+            <span class="s1">cur </span><span class="s2">= </span><span class="s1">next</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 4. Удалить всех студентов с конкретного курса</span>
+    <span class="s0">public void </span><span class="s1">RemoveAllFromCourse</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">cName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">_courses</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">cName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">course?</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">course </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">RegistrationNode reg </span><span class="s2">= (</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">;</span>
+            <span class="s1">BaseNode? next </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink</span><span class="s2">;</span>
+
+            <span class="s3">// Находим студента этой регистрации (идём по StudentLink до StudentNode)</span>
+            
+            <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">GetStudentFromRegistration</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">);</span>
+            
+            <span class="s3">// StudentNode? student = null;</span>
+            <span class="s3">// BaseNode? s = reg.StudentLink;</span>
+            <span class="s3">// while (s != null &amp;&amp; s.IsRegistration())</span>
+            <span class="s3">// {</span>
+            <span class="s3">//     s = ((RegistrationNode)s).StudentLink;</span>
+            <span class="s3">// }</span>
+            <span class="s3">// student = s as StudentNode;</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">student </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+                <span class="s1">RemoveFromStudentRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">student</span><span class="s2">);</span>
+
+            <span class="s1">cur </span><span class="s2">= </span><span class="s1">next</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 5. Вывести курсы, которые посещает студент</span>
+    <span class="s0">public void </span><span class="s1">PrintCoursesOfStudent</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">sName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">_students</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">sName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student?</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;Студент не найден или не записан на курсы.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">Console</span><span class="s2">.</span><span class="s1">Write</span><span class="s2">(</span><span class="s4">&quot;Курсы студента &quot;</span><span class="s2">);</span>
+        <span class="s1">PrintName</span><span class="s2">(</span><span class="s1">sName</span><span class="s2">);</span>
+        <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;:&quot;</span><span class="s2">);</span>
+
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">student </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">RegistrationNode reg </span><span class="s2">= (</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">;</span>
+
+            <span class="s3">// Ищем курс регистрации (локальный цикл)</span>
+            <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">GetCourseFromRegistration</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">);</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">course </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s2">{</span>
+                <span class="s1">PrintName</span><span class="s2">(</span><span class="s1">course</span><span class="s2">.</span><span class="s1">Name</span><span class="s2">);</span>
+                <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">();</span>
+            <span class="s2">}</span>
+            <span class="s1">cur </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 6. Вывести студентов, посещающих курс</span>
+    <span class="s0">public void </span><span class="s1">PrintStudentsOfCourse</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">cName</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">CourseNode? course </span><span class="s2">= </span><span class="s1">_courses</span><span class="s2">.</span><span class="s1">GetNode</span><span class="s2">(</span><span class="s1">cName</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">course?</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;Курс не найден или нет записанных студентов.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">Console</span><span class="s2">.</span><span class="s1">Write</span><span class="s2">(</span><span class="s4">&quot;Студенты курса &quot;</span><span class="s2">);</span>
+        <span class="s1">PrintName</span><span class="s2">(</span><span class="s1">cName</span><span class="s2">);</span>
+        <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">(</span><span class="s4">&quot;:&quot;</span><span class="s2">);</span>
+
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">course </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">RegistrationNode reg </span><span class="s2">= (</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">;</span>
+
+            <span class="s3">// Ищем студента регистрации (локальный цикл)</span>
+            <span class="s1">StudentNode? student </span><span class="s2">= </span><span class="s1">GetStudentFromRegistration</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">);</span>
+            
+            <span class="s3">// BaseNode? s = reg.StudentLink;</span>
+            <span class="s3">// while (s != null &amp;&amp; s.IsRegistration())</span>
+            <span class="s3">//     s = ((RegistrationNode)s).StudentLink;</span>
+            <span class="s3">// StudentNode? student = s as StudentNode;</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">student </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s2">{</span>
+                <span class="s1">PrintName</span><span class="s2">(</span><span class="s1">student</span><span class="s2">.</span><span class="s1">Name</span><span class="s2">);</span>
+                <span class="s1">Console</span><span class="s2">.</span><span class="s1">WriteLine</span><span class="s2">();</span>
+            <span class="s2">}</span>
+            <span class="s1">cur </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// ==================== Вспомогательные методы ====================</span>
+
+    <span class="s3">// Поиск регистрации, связывающей заданных студента и курс.</span>
+    <span class="s0">private </span><span class="s1">RegistrationNode? FindRegistration</span><span class="s2">(</span><span class="s1">StudentNode student</span><span class="s2">, </span><span class="s1">CourseNode course</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">student</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">RegistrationNode reg </span><span class="s2">= (</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">;</span>
+
+            <span class="s3">// Определяем курс этой регистрации (локальный обход до CourseNode)</span>
+            <span class="s1">BaseNode? c </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink</span><span class="s2">;</span>
+            <span class="s0">while </span><span class="s2">(</span><span class="s1">c </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">c</span><span class="s2">.</span><span class="s1">IsRegistration</span><span class="s2">())</span>
+                <span class="s1">c </span><span class="s2">= ((</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">c</span><span class="s2">).</span><span class="s1">CourseLink</span><span class="s2">;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">c </span><span class="s2">== </span><span class="s1">course</span><span class="s2">)</span>
+                <span class="s0">return </span><span class="s1">reg</span><span class="s2">;</span>
+
+            <span class="s1">cur </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// Удаление регистрации из кольца студента (студент передаётся параметром)</span>
+    <span class="s0">private void </span><span class="s1">RemoveFromStudentRing</span><span class="s2">(</span><span class="s1">RegistrationNode reg</span><span class="s2">, </span><span class="s1">StudentNode student</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s1">reg</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">student</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= (</span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink </span><span class="s2">!= </span><span class="s1">student</span><span class="s2">) </span><span class="s1">? reg</span><span class="s2">.</span><span class="s1">StudentLink : </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">BaseNode? prev </span><span class="s2">= </span><span class="s1">FindPrevInStudentRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">student</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">prev </span><span class="s0">is </span><span class="s1">RegistrationNode prevReg</span><span class="s2">)</span>
+            <span class="s1">prevReg</span><span class="s2">.</span><span class="s1">StudentLink </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// Удаление регистрации из кольца курса (курс передаётся параметром)</span>
+    <span class="s0">private void </span><span class="s1">RemoveFromCourseRing</span><span class="s2">(</span><span class="s1">RegistrationNode reg</span><span class="s2">, </span><span class="s1">CourseNode course</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">== </span><span class="s1">reg</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">course</span><span class="s2">.</span><span class="s1">Next </span><span class="s2">= (</span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink </span><span class="s2">!= </span><span class="s1">course</span><span class="s2">) </span><span class="s1">? reg</span><span class="s2">.</span><span class="s1">CourseLink : </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">BaseNode? prev </span><span class="s2">= </span><span class="s1">FindPrevInCourseRing</span><span class="s2">(</span><span class="s1">reg</span><span class="s2">, </span><span class="s1">course</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">prev </span><span class="s0">is </span><span class="s1">RegistrationNode prevReg</span><span class="s2">)</span>
+            <span class="s1">prevReg</span><span class="s2">.</span><span class="s1">CourseLink </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">CourseNode? GetCourseFromRegistration</span><span class="s2">(</span><span class="s1">RegistrationNode reg</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">CourseLink</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">cur</span><span class="s2">.</span><span class="s1">IsRegistration</span><span class="s2">())</span>
+            <span class="s1">cur </span><span class="s2">= ((</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">).</span><span class="s1">CourseLink</span><span class="s2">;</span>
+        <span class="s0">return </span><span class="s1">cur </span><span class="s0">as </span><span class="s1">CourseNode</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">StudentNode? GetStudentFromRegistration</span><span class="s2">(</span><span class="s1">RegistrationNode reg</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">reg</span><span class="s2">.</span><span class="s1">StudentLink</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">cur</span><span class="s2">.</span><span class="s1">IsRegistration</span><span class="s2">())</span>
+            <span class="s1">cur </span><span class="s2">= ((</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">).</span><span class="s1">StudentLink</span><span class="s2">;</span>
+        <span class="s0">return </span><span class="s1">cur </span><span class="s0">as </span><span class="s1">StudentNode</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    
+    <span class="s3">// Поиск предыдущего узла в кольце студента перед target</span>
+    <span class="s0">private </span><span class="s1">BaseNode? FindPrevInStudentRing</span><span class="s2">(</span><span class="s1">RegistrationNode target</span><span class="s2">, </span><span class="s1">StudentNode student</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">student</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s1">BaseNode? prev </span><span class="s2">= </span><span class="s1">student</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">student </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">== </span><span class="s1">target</span><span class="s2">)</span>
+                <span class="s0">return </span><span class="s1">prev</span><span class="s2">;</span>
+            <span class="s1">prev </span><span class="s2">= </span><span class="s1">cur</span><span class="s2">;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">cur</span><span class="s2">.</span><span class="s1">IsRegistration</span><span class="s2">())</span>
+                <span class="s1">cur </span><span class="s2">= ((</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">).</span><span class="s1">StudentLink</span><span class="s2">;</span>
+            <span class="s0">else break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// Поиск предыдущего узла в кольце курса перед target</span>
+    <span class="s0">private </span><span class="s1">BaseNode? FindPrevInCourseRing</span><span class="s2">(</span><span class="s1">RegistrationNode target</span><span class="s2">, </span><span class="s1">CourseNode course</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s1">BaseNode? cur </span><span class="s2">= </span><span class="s1">course</span><span class="s2">.</span><span class="s1">Next</span><span class="s2">;</span>
+        <span class="s1">BaseNode? prev </span><span class="s2">= </span><span class="s1">course</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">!= </span><span class="s1">course </span><span class="s2">&amp;&amp; </span><span class="s1">cur </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">cur </span><span class="s2">== </span><span class="s1">target</span><span class="s2">)</span>
+                <span class="s0">return </span><span class="s1">prev</span><span class="s2">;</span>
+            <span class="s1">prev </span><span class="s2">= </span><span class="s1">cur</span><span class="s2">;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">cur</span><span class="s2">.</span><span class="s1">IsRegistration</span><span class="s2">())</span>
+                <span class="s1">cur </span><span class="s2">= ((</span><span class="s1">RegistrationNode</span><span class="s2">)</span><span class="s1">cur</span><span class="s2">).</span><span class="s1">CourseLink</span><span class="s2">;</span>
+            <span class="s0">else break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// Вывод имени (char[]) в консоль</span>
+    <span class="s0">private static void </span><span class="s1">PrintName</span><span class="s2">(</span><span class="s0">char</span><span class="s2">[] </span><span class="s1">name</span><span class="s2">)</span>
+    <span class="s2">{</span>
+        <span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">;</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">name</span><span class="s2">.</span><span class="s1">Length </span><span class="s2">&amp;&amp; </span><span class="s1">name</span><span class="s2">[</span><span class="s1">i</span><span class="s2">] != </span><span class="s4">'\0'</span><span class="s2">)</span>
+        <span class="s2">{</span>
+            <span class="s1">Console</span><span class="s2">.</span><span class="s1">Write</span><span class="s2">(</span><span class="s1">name</span><span class="s2">[</span><span class="s1">i</span><span class="s2">]);</span>
+            <span class="s1">i</span><span class="s2">++;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
